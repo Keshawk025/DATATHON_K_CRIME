@@ -1,0 +1,94 @@
+# =========================
+# Datathon Project .gitignore
+# =========================
+
+# --- Python / Backend ---
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+backend/venv/
+
+# Testing, documentation, and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+docs/_build/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database / SQLite
+*.sqlite3
+*.db
+
+# Data & Models (if any large datasets/ML models should be ignored)
+# /datasets/*.csv
+# /datasets/*.json
+# /models/*.pkl
+# /models/*.h5
+
+# --- Node.js / Frontend ---
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# Build Output
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+*.tsbuildinfo
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
