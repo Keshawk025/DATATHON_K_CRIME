@@ -1,188 +1,188 @@
-import axios from 'axios';
+// @ts-nocheck
+// Mock API with static values
 
-// Get API base URL and strip trailing '/api' if present since backend routes are mounted on /
-const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl.slice(0, -4) : rawApiUrl;
-
-export const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add a request interceptor to attach JWT token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Auth services
 export const authService = {
-  login: async (credentials: any) => {
-    const response = await api.post('/auth/login', credentials);
-    return response.data;
+  login: async (credentials: any): Promise<any> => {
+    return { access_token: 'mock-token', user: { id: '1', name: 'Admin', role: 'admin' } };
   },
-  getMe: async () => {
-    const response = await api.get('/auth/me');
-    return response.data;
+  getMe: async (): Promise<any> => {
+    return { id: '1', name: 'Admin', role: 'admin', email: 'admin@example.com' };
   },
 };
 
-// Analytics services
 export const analyticsService = {
-  getSummary: async (filters: any) => {
-    const response = await api.get('/dashboard/summary', { params: filters });
-    return response.data.data;
+  getSummary: async (filters: any): Promise<any> => {
+    return { total_firs: 120, total_arrests: 45, total_cases_pending: 75 };
   },
-  getKPIs: async (filters: any) => {
-    const response = await api.get('/dashboard/kpis', { params: filters });
-    return response.data.data;
+  getKPIs: async (filters: any): Promise<any> => {
+    return [
+      { title: 'Total Cases', value: '120', trend: 5 },
+      { title: 'Resolved Cases', value: '45', trend: 2 },
+      { title: 'Pending Cases', value: '75', trend: -1 }
+    ];
   },
-  getTrends: async (filters: any) => {
-    const response = await api.get('/dashboard/trends', { params: filters });
-    return response.data.data;
+  getTrends: async (filters: any): Promise<any> => {
+    return [
+      { date: '2026-01-01', count: 10 },
+      { date: '2026-02-01', count: 15 },
+      { date: '2026-03-01', count: 20 },
+      { date: '2026-04-01', count: 18 }
+    ];
   },
-  getDistribution: async (filters: any) => {
-    const response = await api.get('/dashboard/distribution', { params: filters });
-    return response.data.data;
+  getDistribution: async (filters: any): Promise<any> => {
+    return [
+      { name: 'Theft', value: 40 },
+      { name: 'Cybercrime', value: 30 },
+      { name: 'Assault', value: 20 },
+      { name: 'Fraud', value: 30 }
+    ];
   },
-  getDistrictRanking: async (filters: any) => {
-    const response = await api.get('/dashboard/district-ranking', { params: filters });
-    return response.data.data;
+  getDistrictRanking: async (filters: any): Promise<any> => {
+    return [
+      { district: 'Bengaluru Urban', score: 85, rank: 1 },
+      { district: 'Mysuru', score: 70, rank: 2 },
+      { district: 'Hubballi', score: 60, rank: 3 }
+    ];
   },
-  getRecentActivity: async (filters: any, limit = 5) => {
-    const response = await api.get('/dashboard/recent-activity', { params: { ...filters, limit } });
-    return response.data.data;
+  getRecentActivity: async (filters: any, limit = 5): Promise<any> => {
+    return [
+      { id: '1', type: 'fir', description: 'New FIR filed in Mysuru', timestamp: new Date().toISOString() },
+      { id: '2', type: 'arrest', description: 'Arrest made in Bengaluru', timestamp: new Date().toISOString() }
+    ];
   },
 };
 
-// Metadata services
 export const metadataService = {
-  getDistricts: async () => {
-    const response = await api.get('/districts');
-    return response.data.data;
+  getDistricts: async (): Promise<any> => {
+    return [
+      { id: '1', name: 'Bengaluru Urban' },
+      { id: '2', name: 'Mysuru' },
+      { id: '3', name: 'Hubballi' }
+    ];
   },
-  getCrimeTypes: async () => {
-    const response = await api.get('/crime-types');
-    return response.data.data;
+  getCrimeTypes: async (): Promise<any> => {
+    return [
+      { id: '1', name: 'Theft' },
+      { id: '2', name: 'Cybercrime' },
+      { id: '3', name: 'Assault' }
+    ];
   },
 };
 
-// Geospatial / Heatmap services
 export const geospatialService = {
-  getHeatmapPoints: async (filters: any) => {
-    const response = await api.get('/heatmap', { params: filters });
-    return response.data.data;
+  getHeatmapPoints: async (filters: any): Promise<any> => {
+    return [
+      { lat: 12.9716, lng: 77.5946, weight: 10 },
+      { lat: 12.2958, lng: 76.6394, weight: 5 }
+    ];
   },
-  getHotspots: async (filters: any) => {
-    const response = await api.get('/heatmap/hotspots', { params: filters });
-    return response.data.data;
+  getHotspots: async (filters: any): Promise<any> => {
+    return [
+      { id: '1', name: 'Indiranagar', risk_score: 80, lat: 12.9783, lng: 77.6408 }
+    ];
   },
-  getDistrictStatistics: async (districtId: string) => {
-    const response = await api.get(`/heatmap/districts/${districtId}/statistics`);
-    return response.data.data;
+  getDistrictStatistics: async (districtId: string): Promise<any> => {
+    return { 
+      crime_rate: 45.5, 
+      crime_count: 50,
+      recent_fir_count: 10,
+      repeat_offenders: 5,
+      average_risk_score: 75,
+      trend: [{ month: 'Jan', count: 10 }, { month: 'Feb', count: 15 }],
+      top_crime_types: [{ type: 'Theft', count: 20 }, { type: 'Fraud', count: 15 }],
+      recent_incidents: [{ id: '1', title: 'Theft reported', time: '10:00 AM', severity: 'High' }]
+    };
   },
 };
 
-// Network & Repeat Offender services
 export const networkService = {
-  getNetwork: async (criminalId: string) => {
-    const response = await api.get(`/network/${criminalId}`);
-    return response.data.data;
+  getNetwork: async (criminalId: string): Promise<any> => {
+    return {
+      nodes: [{ id: '1', name: 'John Doe', group: 1 }],
+      links: []
+    };
   },
-  searchNetwork: async (query: string) => {
-    const response = await api.get('/network/search', { params: { query } });
-    return response.data.data;
+  searchNetwork: async (query: string): Promise<any> => {
+    return [
+      { id: '1', name: 'John Doe' }
+    ];
   },
-  getRepeatOffenders: async (filters: any) => {
-    const response = await api.get('/criminals/repeat-offenders/advanced', { params: filters });
-    return response.data.data;
+  getRepeatOffenders: async (filters: any): Promise<any> => {
+    return [
+      { id: '1', full_name: 'Somesh Gowda', crime_count: 5, risk_score: 85, risk_level: 'High' },
+      { id: '2', full_name: 'Ketan Shah', crime_count: 3, risk_score: 60, risk_level: 'Medium' }
+    ];
   },
-  getTimeline: async (criminalId: string) => {
-    const response = await api.get(`/criminals/${criminalId}/timeline`);
-    return response.data.data;
+  getTimeline: async (criminalId: string): Promise<any> => {
+    return [
+      { id: '1', date: '2025-10-10', event: 'First Arrest' }
+    ];
   },
-  getRelationships: async (criminalId: string) => {
-    const response = await api.get(`/criminals/${criminalId}/relationships`);
-    return response.data.data;
+  getRelationships: async (criminalId: string): Promise<any> => {
+    return [
+      { related_id: '2', name: 'Ketan Shah', relation_type: 'accomplice' }
+    ];
   },
 };
 
-// AI Services
 export const aiService = {
-  chat: async (message: string, history: any[]) => {
-    const response = await api.post('/ai/chat', { message, history });
-    return response.data.data.response;
+  chat: async (message: string, history: any[]): Promise<any> => {
+    return "This is a mock AI response to: " + message;
   },
-  getFIRSummary: async (firId: string) => {
-    const response = await api.post('/ai/fir-summary', { fir_id: firId });
-    return response.data.data.summary;
+  getFIRSummary: async (firId: string): Promise<any> => {
+    return "Mock FIR summary for " + firId;
   },
-  getDistrictSummary: async (districtId: string) => {
-    const response = await api.post('/ai/district-summary', { district_id: districtId });
-    return response.data.data.summary;
+  getDistrictSummary: async (districtId: string): Promise<any> => {
+    return "Mock District summary for " + districtId;
   },
-  getInvestigationPlan: async (criminalId: string) => {
-    const response = await api.post('/ai/investigation', { criminal_id: criminalId });
-    return response.data.data.summary;
+  getInvestigationPlan: async (criminalId: string): Promise<any> => {
+    return "Mock Investigation Plan for " + criminalId;
   },
-  getTrendAnalysis: async (districtId?: string, crimeTypeId?: string) => {
-    const response = await api.post('/ai/trend-analysis', {
-      district_id: districtId || null,
-      crime_type_id: crimeTypeId || null
-    });
-    return response.data.data.summary;
+  getTrendAnalysis: async (districtId?: string, crimeTypeId?: string): Promise<any> => {
+    return "Mock Trend Analysis";
   },
 };
 
-// ML / Prediction Services
 export const mlService = {
-  train: async () => {
-    const response = await api.post('/ml/train');
-    return response.data.data;
+  train: async (): Promise<any> => {
+    return { status: 'success', message: 'Model trained successfully' };
   },
-  getStatus: async () => {
-    const response = await api.get('/predict/model-status');
-    return response.data.data;
+  getStatus: async (): Promise<any> => {
+    return { 
+      status: 'Ready', 
+      last_training_date: '2026-07-16',
+      metrics: {
+        hotspot: { accuracy: 92.4 },
+        risk: { f1_score: 0.865 },
+        anomaly: { anomaly_ratio: 0.10 }
+      }
+    };
   },
-  predictHotspot: async (districtId: string, month: number, year: number) => {
-    const response = await api.post('/predict/hotspot', {
-      district_id: districtId,
-      month,
-      year
-    });
-    return response.data.data;
+  predictHotspot: async (districtId: string, month: number, year: number): Promise<any> => {
+    return { 
+      predicted_crime_count: 15,
+      risk_level: 'High',
+      hotspot_score: 85
+    };
   },
-  predictRisk: async (age: number, gender: string, pastFirCount: number, avgSeverity: number) => {
-    const response = await api.post('/predict/risk', {
-      age,
-      gender,
-      past_fir_count: pastFirCount,
-      avg_severity: avgSeverity
-    });
-    return response.data.data;
+  predictRisk: async (age: number, gender: string, pastFirCount: number, avgSeverity: number): Promise<any> => {
+    return { 
+      risk_score: 65, 
+      risk_level: 'Medium' 
+    };
   },
-  predictTrend: async (monthsAhead: number = 6) => {
-    const response = await api.post('/predict/trend', {
-      months_ahead: monthsAhead
-    });
-    return response.data.data;
+  predictTrend: async (monthsAhead: number = 6): Promise<any> => {
+    return [
+      { month_label: 'Jan', predicted_crime_count: 45 },
+      { month_label: 'Feb', predicted_crime_count: 55 },
+      { month_label: 'Mar', predicted_crime_count: 40 },
+      { month_label: 'Apr', predicted_crime_count: 60 }
+    ];
   },
-  predictAnomaly: async (latitude: number, longitude: number, severity: number, month: number, dayOfWeek: number) => {
-    const response = await api.post('/predict/anomaly', {
-      latitude,
-      longitude,
-      severity,
-      month,
-      day_of_week: dayOfWeek
-    });
-    return response.data.data;
+  predictAnomaly: async (latitude: number, longitude: number, severity: number, month: number, dayOfWeek: number): Promise<any> => {
+    return { 
+      is_anomaly: true, 
+      anomaly_index: 85 
+    };
   },
 };

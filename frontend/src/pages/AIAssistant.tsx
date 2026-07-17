@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type ReactElement } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+
 import {
   MessageSquare,
   Send,
@@ -20,20 +20,7 @@ import {
 } from 'lucide-react';
 import { aiService, metadataService, networkService } from '../services/api';
 
-// Axios instance for FIRs list (scoped to this component)
-const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const BASE_URL = rawApiUrl.endsWith('/api') ? rawApiUrl.slice(0, -4) : rawApiUrl;
-const localApi = axios.create({
-  baseURL: BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
-});
-localApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// Axios removed, using static data
 
 interface Message {
   role: 'user' | 'assistant';
@@ -88,19 +75,13 @@ export default function AIAssistant() {
 
   const [firsList, setFirsList] = useState<any[]>([]);
 
-  // Fetch FIRs list
+  // Fetch FIRs list (mocked)
   useEffect(() => {
-    const fetchFirs = async () => {
-      try {
-        const response = await localApi.get('/firs?limit=30');
-        if (response.data?.success) {
-          setFirsList(response.data.data.items);
-        }
-      } catch (err) {
-        console.error("Error loading FIRs list", err);
-      }
-    };
-    fetchFirs();
+    setFirsList([
+      { id: '1', fir_number: '2026-0001', location: 'Bengaluru Urban' },
+      { id: '2', fir_number: '2026-0002', location: 'Mysuru' },
+      { id: '3', fir_number: '2026-0003', location: 'Hubballi' },
+    ]);
   }, []);
 
   // Scroll to bottom on new messages
