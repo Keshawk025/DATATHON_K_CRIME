@@ -15,39 +15,60 @@ export const analyticsService = {
     return { total_firs: 120, total_arrests: 45, total_cases_pending: 75 };
   },
   getKPIs: async (filters: any): Promise<any> => {
-    return [
-      { title: 'Total Cases', value: '120', trend: 5 },
-      { title: 'Resolved Cases', value: '45', trend: 2 },
-      { title: 'Pending Cases', value: '75', trend: -1 }
-    ];
+    return {
+      total_crimes: 120,
+      active_cases: 45,
+      solved_cases: 75,
+      repeat_offenders: 12,
+      high_risk_districts: 3,
+      crimes_today: 5,
+      crimes_this_week: 25,
+      crimes_this_month: 120
+    };
   },
   getTrends: async (filters: any): Promise<any> => {
-    return [
-      { date: '2026-01-01', count: 10 },
-      { date: '2026-02-01', count: 15 },
-      { date: '2026-03-01', count: 20 },
-      { date: '2026-04-01', count: 18 }
-    ];
+    return {
+      monthly: [
+        { time_unit: 'Jan', count: 10 },
+        { time_unit: 'Feb', count: 15 },
+        { time_unit: 'Mar', count: 20 },
+        { time_unit: 'Apr', count: 18 }
+      ]
+    };
   },
   getDistribution: async (filters: any): Promise<any> => {
-    return [
-      { name: 'Theft', value: 40 },
-      { name: 'Cybercrime', value: 30 },
-      { name: 'Assault', value: 20 },
-      { name: 'Fraud', value: 30 }
-    ];
+    return {
+      severity_distribution: [
+        { severity: 1, count: 10 },
+        { severity: 2, count: 20 },
+        { severity: 3, count: 30 },
+        { severity: 4, count: 15 },
+        { severity: 5, count: 5 }
+      ],
+      category_distribution: [
+        { category: 'Theft', count: 40 },
+        { category: 'Cybercrime', count: 30 },
+        { category: 'Assault', count: 20 },
+        { category: 'Fraud', count: 30 }
+      ],
+      status_distribution: [
+        { status: 'Open', count: 15 },
+        { status: 'Under Investigation', count: 30 },
+        { status: 'Solved', count: 75 }
+      ]
+    };
   },
   getDistrictRanking: async (filters: any): Promise<any> => {
     return [
-      { district: 'Bengaluru Urban', score: 85, rank: 1 },
-      { district: 'Mysuru', score: 70, rank: 2 },
-      { district: 'Hubballi', score: 60, rank: 3 }
+      { district_id: '1', district_name: 'Bengaluru Urban', crime_count: 85, average_risk_score: 8.5, top_crime_type: 'Theft' },
+      { district_id: '2', district_name: 'Mysuru', crime_count: 70, average_risk_score: 7.0, top_crime_type: 'Cybercrime' },
+      { district_id: '3', district_name: 'Hubballi', crime_count: 60, average_risk_score: 6.0, top_crime_type: 'Assault' }
     ];
   },
   getRecentActivity: async (filters: any, limit = 5): Promise<any> => {
     return [
-      { id: '1', type: 'fir', description: 'New FIR filed in Mysuru', timestamp: new Date().toISOString() },
-      { id: '2', type: 'arrest', description: 'Arrest made in Bengaluru', timestamp: new Date().toISOString() }
+      { id: '1', fir_number: 'FIR-001', district: { name: 'Bengaluru Urban' }, crime_type: { name: 'Theft' }, severity: 3, status: 'Open', occurrence_date: '2026-07-16' },
+      { id: '2', fir_number: 'FIR-002', district: { name: 'Mysuru' }, crime_type: { name: 'Cybercrime' }, severity: 4, status: 'Under Investigation', occurrence_date: '2026-07-15' }
     ];
   },
 };
